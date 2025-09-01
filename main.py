@@ -31,6 +31,15 @@ receitas = [
 
     },
     {
+'nome' : 'Pink lemonade',
+'ingredientes' : ['1 garrafa de água sem gás bem gelada', '1 xícara (chá) de açúcar', '1 xícara (chá) de suco de cranberry', '1 xícara (chá) de suco de limão-siciliano', '1 limão-siciliano em gomos, com casca'],
+'modo de preparo' : '1- Em uma jarra de servir, coloque a água, o açúcar acrescente o suco de cranberry, o suco e os gomos de limão-siciliano; 2- Deixe em geladeira por cerca de 2 horas. Sirva.'
 
+
+    },
+    {
+        'nome' : 'Negroni',
+        'ingredientes' : ['1 dose de Campari', '1 dose de Gin', '1 dose de Vermute tinto', '1 rodela de laranja com casca e sem semente', 'Gelo à vontade'],
+        'modo de preparo' : '1- Misture as doses em um copo; 2- Mexa e levente com uma colher; 3- Adicione o gelo; 4- Mexa por mais 30 segundos; 5- Enfeite com a laranja.'
     }
 ]
