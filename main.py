@@ -43,3 +43,12 @@ receitas = [
         'modo de preparo' : '1- Misture as doses em um copo; 2- Mexa e levente com uma colher; 3- Adicione o gelo; 4- Mexa por mais 30 segundos; 5- Enfeite com a laranja.'
     }
 ]
+@app.get("/")
+def hello():
+    return{"title" : "Livro de receitas"}
+@app.get("/receitas/{receita}")
+def get_receita(receita: str):
+    for r in receitas:
+        if r["nome"]. lower() == receita.lower():
+            return r
+    return {"error": "Receita não encontrada"}
