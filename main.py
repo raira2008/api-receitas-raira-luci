@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from typing import list
+from typing import List
 
 app = FastAPI()
 '''
@@ -67,3 +67,10 @@ def get_receita_por_nome(nome_receita: str):
         if receita.nome.lower() == nome.lower():
             return receita
     return {"receita não encontrada"}
+
+@app.post("/receitas")
+def create_receita(dados: Receita):
+    nova_receita = dados
+
+    receitas.append(nova_receita)
+    return nova_receita
