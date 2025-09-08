@@ -1,7 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from typing import list
+
 app = FastAPI()
-
-
+'''
 receitas = [
     {
         'nome' : 'Brownie',
@@ -43,12 +45,25 @@ receitas = [
         'modo de preparo' : '1- Misture as doses em um copo; 2- Mexa e levente com uma colher; 3- Adicione o gelo; 4- Mexa por mais 30 segundos; 5- Enfeite com a laranja.'
     }
 ]
+'''
+
+class ReceitaBase(BaseModel):
+    nome: str
+    ingredientes: List[str]
+    modo_de_preparo: str 
+
+class Receita(ReceitaBase):
+    id: int
+
+receitas: List[Receita] = []
+
 @app.get("/")
 def hello():
     return{"title" : "Livro de receitas"}
+
 @app.get("/receitas/{receita}")
-def get_receita(receita: str):
-    for r in receitas:
-        if r["nome"]. lower() == receita.lower():
-            return r
-    return {"error": "Receita não encontrada"}
+def get_receita_por_nome(nome_receita: str):
+    for receita in receitas:
+        if receita.nome.lower() == nome.lower():
+            return receita
+    return {"receita não encontrada"}
