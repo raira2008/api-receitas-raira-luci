@@ -32,14 +32,20 @@ def get_receita_por_id(id: int):
     for receita in receitas:
         if receita.id == id:
             return receita
-        return{"receita não encontrada"}
 
-
+@app.get("/receitas/id/{id}")
+def get_receita_por_id(id: int):
+    for receita in receitas:
+        if receita.id == id:
+            return receita
+    return{"receita não encontrada"}
 
 @app.post("/receitas")
-def create_receita(dados: Receita):
-    nova_receita = dados
-    
+def create_receita(dados: ReceitaBase):
+    for r in receitas:
+        if r.nome.lower() == dados.nome.lower():
+            return ("Já existe uma receita com esse nome")
+
     novo_id = 1 if len(receitas) == 0 else receitas[-1].id + 1
     nova_receita = Receita(
         id=novo_id,
@@ -47,8 +53,9 @@ def create_receita(dados: Receita):
         ingredientes=dados.ingredientes,
         modo_de_preparo=dados.modo_de_preparo
     )
-
-    
     receitas.append(nova_receita)
-   
     return nova_receita
+
+
+   
+    
