@@ -14,6 +14,9 @@ class Receita(ReceitaBase):
 
 receitas: List[Receita] = []
 
+@app.get("/")
+def hello():
+    return{"title" : "Livro de Receitas"}
 
 
 @app.get("/receitas/{nome_receita}")
