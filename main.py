@@ -61,10 +61,10 @@ receitas: List[Receita] = []
 def hello():
     return{"title" : "Livro de receitas"}
 
-@app.get("/receitas/{receita}")
+@app.get("/receitas/{nome_receita}")
 def get_receita_por_nome(nome_receita: str):
     for receita in receitas:
-        if receita.nome.lower() == nome.lower():
+        if receita.nome.lower() == nome_.lower():
             return receita
     return {"receita não encontrada"}
 
