@@ -57,7 +57,7 @@ def create_receita(dados: ReceitaBase):
     return nova_receita
 
 @app.put("/receitas/{id}")
-def update_receita(id: int, dados: create_receita):
+def update_receita(id: int, dados: ReceitaBase):
     if not dados.nome.strip() or not dados.modo_de_preparo.strip() or not dados.ingredientes:
         return {"erro": "Nenhum campo pode estar vazio"}
     
