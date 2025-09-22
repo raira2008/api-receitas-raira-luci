@@ -74,6 +74,11 @@ def update_receita(id: int, dados: ReceitaBase):
             return receita_atualizada
     return {"erro": "Já existe uma receita com esse nome"}
 
+@app.delete("/receitas/{id}")
+def deletar_receita(id: int):
+    for i in range(len(receitas)):
+        if receitas[i]
+
 
    
     
