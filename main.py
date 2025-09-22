@@ -18,6 +18,12 @@ receitas: List[Receita] = []
 def hello():
     return{"title" : "Livro de Receitas"}
 
+@app.get("/receitas/id/{id}")
+def get_receita_por_id(id: int):
+    for receita in receitas:
+        if receita.id == id:
+            return receita
+    return{"receita não encontrada"}
 
 @app.get("/receitas/{nome_receita}")
 def get_receita_por_nome(nome_receita: str):
@@ -27,24 +33,12 @@ def get_receita_por_nome(nome_receita: str):
     
     return{"receita não encontrada"}
 
-@app.get("/receitas/id/{id}")
-def get_receita_por_id(id: int):
-    for receita in receitas:
-        if receita.id == id:
-            return receita
-
-@app.get("/receitas/id/{id}")
-def get_receita_por_id(id: int):
-    for receita in receitas:
-        if receita.id == id:
-            return receita
-    return{"receita não encontrada"}
 
 @app.post("/receitas")
 def create_receita(dados: ReceitaBase):
     for r in receitas:
         if r.nome.lower() == dados.nome.lower():
-            return ("Já existe uma receita com esse nome")
+            return {"erro": "Já existe uma receita com esse nome"}
 
     novo_id = 1 if len(receitas) == 0 else receitas[-1].id + 1
     nova_receita = Receita(
@@ -58,27 +52,27 @@ def create_receita(dados: ReceitaBase):
 
 @app.put("/receitas/{id}")
 def update_receita(id: int, dados: ReceitaBase):
-    if not dados.nome.strip() or not dados.modo_de_preparo.strip() or not dados.ingredientes:
-        return {"erro": "Nenhum campo pode estar vazio"}
-    
     for r in receitas:
-        if r.id != id and r.nome.lower() == dados.nome.lower():
+        if r.nome == dados.nome and r.id != id:
             return {"erro": "Já existe uma receita com esse nome"}
-    
+        
+    if dados.nome.strip() == "" or dados.modo_de_preparo.strip() == "":
+        return {"erro": "Nome e modo de preparo não podem ser vazios"}
+    for ingrediente in dados.ingredientes:
+        if ingrediente.strip() == "":
+            return {"erro": "Ingredientes não podem ser vazios"}
+        
     for i in range(len(receitas)):
-        if receitas [i].id == id:
+        if receitas[i].id == id:
             receita_atualizada = Receita(
-                id = id,
-                nome = dados.nome,
-                ingredientes = dados.ingredientes,
-                modo_de_preparo = dados.modo_de_preparo,
+                id=id,
+                nome=dados.nome,
+                ingredientes=dados.ingredientes,
+                modo_de_preparo=dados.modo_de_preparo,
             )
-            
             receitas[i] = (receita_atualizada)
             return receita_atualizada
-    
-
-    return{"mensagem" : "Receita não encontrada"}
+    return {"erro": "Já existe uma receita com esse nome"}
 
 
    
