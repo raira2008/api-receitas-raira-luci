@@ -74,6 +74,20 @@ def update_receita(id: int, dados: ReceitaBase):
             return receita_atualizada
     return {"erro": "Já existe uma receita com esse nome"}
 
+@app.delete("/receitas/{id}")
+def deletar_receita(id: int):
+    if len(receitas) == 0:
+        return {"mensagem": "Não há receitas para deletar."}
+    
+    for i in range(len(receitas)):
+        if receitas[i].id == id:
+             receita_deletada = receitas.pop(i)  
+             return {
+                "mensagem": f"A receita '{receita_deletada.nome}' foi deletada com sucesso.",
+                "receita": receita_deletada
+            }
+    
+            
 
    
     
