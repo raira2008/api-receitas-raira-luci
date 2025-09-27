@@ -18,6 +18,10 @@ receitas: List[Receita] = []
 def hello():
     return{"title" : "Livro de Receitas"}
 
+@app.get("/receitas")
+def listar_receitas():
+    return receitas
+
 @app.get("/receitas/id/{id}")
 def get_receita_por_id(id: int):
     for receita in receitas:
@@ -54,7 +58,7 @@ def create_receita(dados: ReceitaBase):
 def update_receita(id: int, dados: ReceitaBase):
     for r in receitas:
         if r.nome == dados.nome and r.id != id:
-            return {"erro": "Já existe uma receita com esse nome"}
+            return {"erro": "Já existe uma receita com esse ID"}
         
     if dados.nome.strip() == "" or dados.modo_de_preparo.strip() == "":
         return {"erro": "Nome e modo de preparo não podem ser vazios"}
@@ -75,10 +79,19 @@ def update_receita(id: int, dados: ReceitaBase):
     return {"erro": "Já existe uma receita com esse nome"}
 
 @app.delete("/receitas/{id}")
-def deletar_receita(id: int):
+def delete_receita(id: int):
+    if len(receitas) == 0:
+        return {"mensagem": "Não há receitas para deletar."}
     for i in range(len(receitas)):
-        if receitas[i]
-
+        if receitas[i].id == id:
+            receita_deletada = receitas.pop(i) 
+            return {
+                "mensagem": f"A receita '{receita_deletada.nome}' foi deletada com sucesso.",
+                "receita": receita_deletada
+            }
+    
+    return {"mensagem": "Receita não encontrada!"}
+            
 
    
     
