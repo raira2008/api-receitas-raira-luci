@@ -58,7 +58,7 @@ def create_receita(dados: ReceitaBase):
 def update_receita(id: int, dados: ReceitaBase):
     for r in receitas:
         if r.nome == dados.nome and r.id != id:
-            return {"erro": "Já existe uma receita com esse ID"}
+            return {"erro": "Já existe uma receita com esse nome"}
         
     if dados.nome.strip() == "" or dados.modo_de_preparo.strip() == "":
         return {"erro": "Nome e modo de preparo não podem ser vazios"}
@@ -76,7 +76,7 @@ def update_receita(id: int, dados: ReceitaBase):
             )
             receitas[i] = (receita_atualizada)
             return receita_atualizada
-    return {"erro": "Já existe uma receita com esse nome"}
+    return {"erro": "Receita não encontrada"}
 
 @app.delete("/receitas/{id}")
 def delete_receita(id: int):
