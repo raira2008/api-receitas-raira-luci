@@ -61,7 +61,7 @@ def update_receita(id: int, dados: ReceitaBase):
             return {"erro": "Já existe uma receita com esse nome"}
         
     if dados.nome.strip() == "" or dados.modo_de_preparo.strip() == "":
-        return {"erro": "Nome e modo de preparo não podem ser vazios"}
+        return {"erro": "Nome ou modo de preparo não podem ser vazios"}
     for ingrediente in dados.ingredientes:
         if ingrediente.strip() == "":
             return {"erro": "Ingredientes não podem ser vazios"}
