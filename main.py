@@ -41,7 +41,7 @@ def get_receita_por_nome(nome_receita: str):
 @app.post("/receitas")
 def create_receita(dados: ReceitaBase):
     for r in receitas:
-        if r.nome.lower() == dados.nome.lower():
+        if r.nome.lower() == dados.nome.lower(): #verica se já existe uma receita com esse nome
             return {"erro": "Já existe uma receita com esse nome"}
 
     novo_id = 1 if len(receitas) == 0 else receitas[-1].id + 1
@@ -57,7 +57,7 @@ def create_receita(dados: ReceitaBase):
 @app.put("/receitas/{id}")
 def update_receita(id: int, dados: ReceitaBase):
     for r in receitas:
-        if r.nome == dados.nome and r.id != id:
+        if r.nome.lower() == dados.nome.lower() and r.id != id: #Verifica se existe uma receita com esse nome
             return {"erro": "Já existe uma receita com esse nome"}
         
     if dados.nome.strip() == "" or dados.modo_de_preparo.strip() == "":
