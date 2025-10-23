@@ -1,3 +1,5 @@
+from pydantic import BaseModel
+from typing import List 
 class ReceitaBase(BaseModel):
     nome: str
     ingredientes: List[str]

@@ -1,7 +1,7 @@
 from http import HTTPStatus
 from fastapi import FastAPI, HTTPException
 from typing import List
-from .schema import ReceitaBase, Receita
+from schema import ReceitaBase, Receita
 
 app = FastAPI(title= "API da Raira")
 
