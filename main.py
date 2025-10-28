@@ -37,7 +37,11 @@ def create_receita(dados: ReceitaBase):
     for r in receitas:
         if r.nome.lower() == dados.nome.lower(): #verica se já existe uma receita com esse nome
             raise HTTPException(status_code=HTTPStatus.CONFLICT, detail="Já existe uma receita com esse nome!")
-
+    if dados.nome.strip() == "" or dados.modo_de_preparo.strip() == "":
+        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail="Nome ou modo de preparo não podem ser vazios!")
+    for ingrediente in dados.ingredientes:
+        if ingrediente.strip() == "":
+                raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail="Ingredientes não podem ser vazios!")
     novo_id = 1 if len(receitas) == 0 else receitas[-1].id + 1
     nova_receita = Receita(
         id=novo_id,
@@ -74,7 +78,7 @@ def update_receita(id: int, dados: ReceitaBase):
 @app.delete("/receitas/{id}",response_model=Receita, status_code=HTTPStatus.OK)
 def delete_receita(id: int):
     if len(receitas) == 0:
-        return {"mensagem": "Não há receitas para deletar."}
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Não existem receitas para deletar!")
     for i in range(len(receitas)):
         if receitas[i].id == id:
             receita_deletada = receitas.pop(i) 
