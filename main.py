@@ -1,11 +1,11 @@
 from http import HTTPStatus
 from fastapi import FastAPI, HTTPException
 from typing import List
-from schema import ReceitaBase, Receita
+from schema import ReceitaBase, Receita, Usuario, BaseUsuario, UsuarioPublic
 
 app = FastAPI(title= "API da Raira")
 
-
+usuarios: List[Usuario] = []
 receitas: List[Receita] = []
 
 @app.get("/", status_code=HTTPStatus.OK)
@@ -51,6 +51,9 @@ def create_receita(dados: ReceitaBase):
     )
     receitas.append(nova_receita)
     return nova_receita
+
+@app.post("/usuarios", status_code=HTTPStatus.CREATED, response_model=UsuarioPublic)
+def create_usuario(dados: BaseUsuario):
 
 @app.put("/receitas/{id}", response_model=Receita,  status_code=HTTPStatus.OK)
 def update_receita(id: int, dados: ReceitaBase):
