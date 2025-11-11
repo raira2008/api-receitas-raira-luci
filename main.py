@@ -12,7 +12,11 @@ receitas: List[Receita] = []
 def hello():
     return{"title" : "Livro de Receitas"}
 
-@app.get("/receitas",response_model=List[Receita], status_code=HTTPStatus.OK)
+@app.get("/receitas",response_model=List[UsuarioPublic], status_code=HTTPStatus.OK)
+def listar_usuarios():
+    return usuarios
+
+@app.get("/usuarios",response_model=List[UsuarioPublic], status_code=HTTPStatus.OK)
 def listar_receitas():
     return receitas
 
@@ -23,6 +27,13 @@ def get_receita_por_id(id: int):
             return receita
     raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Receita não encontrada")
 
+@app.get("/usuarios/id/{id}", response_model=UsuarioPublic, status_code=HTTPStatus.OK)
+def get_usuario_por_id(id: int):
+    for usuario in usuarios:
+        if usuario.id == id:
+            return usuario
+    raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Usuário não encontrado")
+
 @app.get("/receitas/{nome_receita}", response_model=Receita, status_code=HTTPStatus.OK)
 def get_receita_por_nome(nome_receita: str):
     for receita in receitas:
@@ -30,6 +41,14 @@ def get_receita_por_nome(nome_receita: str):
             return receita
     
     raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Receita não encontrada")
+
+@app.get("/usuarios/{nome_usuario}", response_model=UsuarioPublic, status_code=HTTPStatus.OK)
+def get_usuario_por_nome(nome_usuario: str):
+    for usuario in usuarios:
+        if usuario.nome_usuario == nome_usuario:
+            return usuario
+    
+    raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Usuário não encontrado")
 
 
 @app.post("/receitas", response_model=Receita, status_code=HTTPStatus.CREATED)
@@ -54,6 +73,27 @@ def create_receita(dados: ReceitaBase):
 
 @app.post("/usuarios", status_code=HTTPStatus.CREATED, response_model=UsuarioPublic)
 def create_usuario(dados: BaseUsuario):
+    for u in usuarios:
+        if u.email.lower() == dados.email.lower().strip(): 
+            raise HTTPException(status_code=HTTPStatus.CONFLICT, detail="Já existe um usuário cadastrado com esse e-mail!")
+    if dados.nome_usuario.strip() == "" or dados.email.strip() == "":
+        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail="Nome do usuário ou email não podem ser vazios!")
+    for senha in dados.senha:
+        if senha.strip() == "":
+                raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail="Senha não pode ser vazio!")
+    novo_id = 1 if len(usuarios) == 0 else usuarios[-1].id + 1
+    novo_usuario = Usuario(
+        id=novo_id,
+        nome_usuario=dados.nome_usuario,
+        senha=dados.senha,
+        email=dados.email
+    )
+    usuarios.append(novo_usuario)
+    return UsuarioPublic(
+        id= novo_usuario.id,
+        nome_usuario= novo_usuario.nome_usuario,
+        email= novo_usuario.email
+    )
 
 @app.put("/receitas/{id}", response_model=Receita,  status_code=HTTPStatus.OK)
 def update_receita(id: int, dados: ReceitaBase):
@@ -78,6 +118,29 @@ def update_receita(id: int, dados: ReceitaBase):
             return receita_atualizada
     raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Receita não encontrada")
 
+@app.put("/usuarios/{id}", response_model=UsuarioPublic, status_code=HTTPStatus.OK)
+def update_usuario(id: int, dados: BaseUsuario):
+    for u in usuarios:
+        if u.email.lower() == dados.email.lower() and u.id != id: #Verifica se existe uma receita com esse nome
+            raise HTTPException(status_code=HTTPStatus.CONFLICT, detail="Já existe um usuário com esse nome!")
+    if dados.nome_usuario.strip() == "" or dados.email.strip() == "":
+        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail="Nome do usuário ou email não podem ser vazios!")
+    if dados.senha.strip() == "":
+        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail="Senha não pode ser vazio!")
+    
+    for i in range(len(usuarios)):
+        if usuarios[i].id == id:
+            usuario_atualizado = Usuario(
+                id=id,
+                nome_usuario= dados.nome_usuario,
+                senha=dados.senha,
+                email=dados.email,
+            )
+            usuarios[i] = usuario_atualizado
+            return usuario_atualizado
+    raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Usuário não encontrado")
+        
+
 @app.delete("/receitas/{id}",response_model=Receita, status_code=HTTPStatus.OK)
 def delete_receita(id: int):
     if len(receitas) == 0:
@@ -91,6 +154,22 @@ def delete_receita(id: int):
             }
     
     raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Receita não encontrada")
+
+@app.delete("/usuarios/{id}", response_model=dict, status_code=HTTPStatus.OK)
+def delete_usuario(id: int):
+    if len(usuarios) == 0:
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Não existem usuarios para deletar!")
+    for i in range(len(usuarios)):
+        if usuarios[i].id == id:
+            usuario_deletado = usuarios.pop(i) 
+            return {
+                "mensagem": f"O usuário '{usuario_deletado.nome_usuario}' foi deletado com sucesso.",
+                "usuario": usuario_deletado
+            }
+    
+    raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Usuário não encontrado")
+
+
             
 
    
