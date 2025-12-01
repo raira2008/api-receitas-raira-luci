@@ -14,7 +14,7 @@ class Usuario(BaseModel):
     nome_usuario: str
     email: str
     senha: str
-
+    
 class BaseUsuario(BaseModel):
     nome_usuario: str
     email: str
